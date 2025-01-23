@@ -6,20 +6,20 @@ Ejercicio01.php - Crea un formulario que permita gesƟonar la canƟdad de refres
 -->
 
 <?php //para procesar la inc¡formacion (CONTROLADOR)
-/* 
-when user click on a button (if from POST has been submitted)
-    1. get data from form
-    2. save worker data 
-    3. detect button
-        3.1. to add products
-            3.1.1. evaluate product
-            3.1.2. add quantity to corresponding product
+    session_start();
+//when user click on a button (if from POST has been submitted)
+//    1. get data from form
+//    2. save worker data 
+//    3. detect button
+//        3.1. to add products
+//            3.1.1. evaluate product
+//            3.1.2. add quantity to corresponding product
+//
+//        3.2. to remove products
+//            3.2.1. evaluate product
+//            3.2.2. check i fquantity is not greater than current one
+//            3.2.3. substract from quantity to corresponding product
 
-        3.2. to remove products
-            3.2.1. evaluate product
-            3.2.2. check i fquantity is not greater than current one
-            3.2.3. substract from quantity to corresponding product
-*/
 ?>
 
 <!-- para interactuar con el usuario (VIEW)-->
