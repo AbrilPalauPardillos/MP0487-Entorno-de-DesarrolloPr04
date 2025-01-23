@@ -30,6 +30,26 @@ Ejercicio01.php - Crea un formulario que permita gesƟonar la canƟdad de refres
     </head>
     <body>
         <h1>Supermarket management</h1>
+        <form method="POST" action="">
+            <!-- WORKER -->
+            <label for="worker">Worker name:</label>
+            <input type="text" id="worker" name="worker" required><br>
+
+            <!-- PRODUCT -->
+            <label for="product">Product: </label>
+            <select id="product" name="Product">
+                <option value="milk">Milk</option>
+                <option value="soft drink">Soft drink</option>
+            </select><br>
+
+            <!-- QUANTITY -->
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" name="Quantity" required><br>
+
+            <!-- BUTTONS -->
+            <button type="submit" name="action" value="add">Add</button>
+            <button type="submit" name="action" value="remove">Remove</button>
+        </form>
 <!--tiene que tener 3 bortones -->
 
     </body>
