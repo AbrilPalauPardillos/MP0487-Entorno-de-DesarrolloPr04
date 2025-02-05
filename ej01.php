@@ -8,47 +8,60 @@ Ejercicio01.php - Crea un formulario que permita gestionar la cantidad de refres
 <?php //para procesar la inc¡formacion (CONTROLADOR)
 //when user click on a button (if from POST has been submitted)
     session_start();
-// initialze form
-    if (isset($_SESSION['inventory'])) {
-        $_SESSION['inventory'] = [
-            'milk' => 50,
-            'soft drink' => 50,
-        ]; 
-    }
-//    1. get data from form
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $worker = $_POST['worker'] ?? null;
-        $product = $_POST['product'] ?? null;
-        $quantity = isset($_POST['quantity']) ? (int)$_POST['Quantity'] : 0;
-        $action = $_POST['action'] ?? null;
-    }
-//    2. save worker data 
-    if ($worker) {
-        $_SESSION['worker'] = $worker;
-    }
-//    3. detect button
-//        3.1. to add products
-//            3.1.1. evaluate product
-//            3.1.2. add quantity to corresponding product
 
-//        3.2. to remove products
-//            3.2.1. evaluate product
-//            3.2.2. check i fquantity is not greater than current one
-//            3.2.3. substract from quantity to corresponding product
-    if ($action === 'add' && $quantity > 0) {
-        $_SESSION['inventory'][$product] += $quantity; // here add the quantity of the product selected.
-        echo "<p style='color:green;'>Added $quantity units of $product by {$_SESSION['worker']}.</p>";
-    }elseif ($action === 'remove' & $quantity > 0) {
-        if ($_SESSION['inventory'][$product] >= $quantity) {
-            $_SESSION['inventory'][$product] -= $quantity;
-            echo "<p style='color:green;'>Removed $quantity units of $product by {$_SESSION['worker']}.</p>";
-        }else {
-            echo "<p style='color:red;'>Error: Not enough $product to remove $quantity units.</p>";
-        }
-    }elseif ($action === 'reset') {
-        session_destroy();
-        header("Location: {$_SERVER['PHP_SELF']}");
-        exit();
+// define session products if they do not exist
+if (!isset($_SESSION['softDrink'])) {
+    $_SESSION['softDrink'] = 0;
+}
+if (!isset($_SESSION['milk'])) {
+    $_SESSION['milk'] = 0;
+}
+if (!isset($_SESSION['worker'])) {
+    $_SESSION['worker'] = null;
+}
+//if from POST has been submited
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// get data from form
+        $worker = $_POST['worker'];
+        $product = $_POST['product'] ;
+        $quantity = $_POST['Quantity'];
+        // save in session worker
+        $_SESSION["worker"] = $worker;
+        // add products
+        if (isset($_POST['add'])) {
+            switch ($product) {
+                case 'milk':
+                    $_SESSION['milk']+=$quantity;
+                    break;
+                case 'softDrink':
+                    $_SESSION['softDrink']+=$quantity;
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+            //remove products
+            }elseif (isset($_POST['remove'])) {
+
+                switch ($product) {
+                    case 'milk':
+                        if ($_SESSION['milk'] - $quantity < 0) {
+                            echo "<br> <font color= 'red'> <p> Error: It is impossible remove more quantity than we have in store.</p></dont>";
+                        } else {
+                            $_SESSION['milk'] -= $quantity;
+                        }
+                        break;
+                    case 'softDrink':
+                        if ($_SESSION['softDrink'] - $quantity < 0) {
+                            echo "<br> <font color= 'red'> <p> Error: It is impossible remove more quantity than we have in store.</p></dont>";
+                        } else {
+                            $_SESSION['softDrink'] -= $quantity;
+                        }                        break;
+                    default:
+                    echo "<br> <font color= 'red'> <p> Error: Product not found.</p></dont>";
+                        break;
+                }
+                }
     }
 ?>
 
@@ -58,22 +71,23 @@ Ejercicio01.php - Crea un formulario que permita gestionar la cantidad de refres
     <head>
         <title>Supermarket management</title>
     </head>
+   
     <body>
         <h1>Supermarket management</h1>
-        <form method="POST" action="">
+        <form method="POST" action="ej01.php">
             <!-- WORKER -->
             <label for="worker">Worker name:</label>
             <input type="text" id="worker" name="worker" required><br>
 
             <!-- PRODUCT -->
-            <label for="product">Product: </label>
+            <h2>Choose product:</h2>
             <select id="product" name="Product">
                 <option value="milk">Milk</option>
                 <option value="soft drink">Soft drink</option>
             </select><br>
 
             <!-- QUANTITY -->
-            <label for="quantity">Quantity</label>
+            <h2>Quantity: </h2>
             <input type="number" id="quantity" name="Quantity" required><br>
 
             <!-- BUTTONS -->
@@ -81,6 +95,9 @@ Ejercicio01.php - Crea un formulario que permita gestionar la cantidad de refres
             <button type="submit" name="action" value="remove">Remove</button>
         </form>
 <!--tiene que tener 3 bortones -->
-
-    </body>
+    <h2>Inventory:</h2>
+    <p>worker: <?php echo isset($_SESSION['worker']) ? $_SESSION['worker'] : ''; ?></p>
+    <p>units milk: <?php echo isset($_SESSION['milk']) ? $_SESSION['milk'] : ''; ?></p>
+    <p>units soft drink: <?php echo isset($_SESSION['softDrink']) ? $_SESSION['softDrink'] : ''; ?></p>
+</body>
 </html>
