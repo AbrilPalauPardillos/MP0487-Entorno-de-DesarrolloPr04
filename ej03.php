@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['average'])) {
     <h1>Shopping list</h1>
     <form method="post">
         <label for="name">name:</label>
-        <input type="text" name="name" id="name" value="<?php echo $name; ?>">
+        <input type="text" name="name" id="name">
         <br>
         <label for="quantity">quantity:</label>
         <input type="number" name="quantity" id="quantity" value="<?php echo $quantity; ?>">
@@ -138,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['average'])) {
             <?php } ?>
             <tr>
                 <td colspan="3" align="right"><strong>Total:</strong></td>
-                <td><?php echo $totalValue; ?></td>
+                <td><?php echo $totalValue; ?></td>1
                 <td>
                     <form method="post">
                         <input type="submit" name="total" value="Calculate total">
