@@ -33,39 +33,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['average'])) {
 
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Ejercicio 2 - PHP</title>
-</head>
-<body>
-    <h2>Modificar Array</h2>
-    <form method="post">
-        <label>Posición:</label>
-        <select name="position">
-            <?php foreach ($_SESSION['numbers'] as $index => $num): ?>
-                <option value="<?php echo $index; ?>"><?php echo $index; ?></option>
-            <?php endforeach; ?>
-        </select>
-        <label>Nuevo Valor:</label>
-        <input type="number" name="value" required>
-        <button type="submit" name="modify">Modificar</button>
-    </form>
-
-    <h3>Array Actual</h3>
-    <p><?php echo implode(', ', $_SESSION['numbers']); ?></p>
-    
-    <form method="post">
-        <button type="submit" name="average">Calcular Promedio</button>
-    </form>
-    
-    <?php if (isset($average)): ?>
-        <h3>Promedio: <?php echo number_format($average, 2); ?></h3>
-    <?php endif; ?>
-</body>
-</html>
-
-
-<!DOCTYPE html>
-<html>
 
 <head>
     <title>Shopping list</title>
