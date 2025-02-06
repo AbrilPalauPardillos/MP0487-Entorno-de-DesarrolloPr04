@@ -10,26 +10,78 @@ Crea un código php que permita gesƟonar una lista de la compra.
 <?php
 session_start();
 
-# initialize array if not exist in session
-if (!isset($_SESSION['numbers'])) {
-    $_SESSION['numbers'] = [10, 20, 30];
+# initializa list if not exist in session
+if (!isset($_SESSION['list'])) {
+    $_SESSION['list'] = [];
 }
 
-# modify value in an specific position
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['modify'])) {
-    $position = (int)$_POST['position'];
-    $value = (int)$_POST['value'];
+$error = $message = "";
+$name = $quantity = $price = "";
+$index = -1;
+$totalValue = 0;
+
+# add new item
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add'])) {
+    $name = trim($_POST['name']);
+    $quantity = (int)$_POST['quantity'];
+    $price = (float)$_POST['price'];
     
-    if ($position >= 0 && $position < count($_SESSION['numbers'])) {
-        $_SESSION['numbers'][$position] = $value;
+    if ($name && $quantity > 0 && $price > 0) {
+        $_SESSION['list'][] = ['name' => $name, 'quantity' => $quantity, 'price' => $price];
+        $message = "Item added successfully.";
+    } else {
+        $error = "Please fill all fields correctly.";
     }
 }
 
-# calculate the average
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['average'])) {
-    $average = array_sum($_SESSION['numbers']) / count($_SESSION['numbers']);
+# modify item
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit'])) {
+    $name = $_POST['name'];
+    $quantity = $_POST['quantity'];
+    $price = $_POST['price'];
+    $index = $_POST['index'];
+}
+
+# update item
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
+    $index = (int)$_POST['index'];
+    if ($index >= 0 && isset($_SESSION['list'][$index])) {
+        $_SESSION['list'][$index] = [
+            'name' => trim($_POST['name']),
+            'quantity' => (int)$_POST['quantity'],
+            'price' => (float)$_POST['price']
+        ];
+        $message = "Item updated successfully.";
+    } else {
+        $error = "Invalid item selection.";
+    }
+}
+
+# delete item
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete'])) {
+    $index = (int)$_POST['index'];
+    if ($index >= 0 && isset($_SESSION['list'][$index])) {
+        array_splice($_SESSION['list'], $index, 1);
+        $message = "Item deleted successfully.";
+    } else {
+        $error = "Invalid item selection.";
+    }
+}
+
+# calculate the total cost
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['total'])) {
+    foreach ($_SESSION['list'] as $item) {
+        $totalValue += $item['quantity'] * $item['price'];
+    }
+}
+
+# reset list
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reset'])) {
+    $_SESSION['list'] = [];
+    $message = "Shopping list cleared.";
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -59,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['average'])) {
     <h1>Shopping list</h1>
     <form method="post">
         <label for="name">name:</label>
-        <input type="text" name="name" id="name">
+        <input type="text" name="name" id="name" value="<?php echo $name; ?>">
         <br>
         <label for="quantity">quantity:</label>
         <input type="number" name="quantity" id="quantity" value="<?php echo $quantity; ?>">
@@ -105,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['average'])) {
             <?php } ?>
             <tr>
                 <td colspan="3" align="right"><strong>Total:</strong></td>
-                <td><?php echo $totalValue; ?></td>1
+                <td><?php echo $totalValue; ?></td>
                 <td>
                     <form method="post">
                         <input type="submit" name="total" value="Calculate total">
